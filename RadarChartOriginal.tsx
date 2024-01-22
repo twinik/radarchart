@@ -30,7 +30,6 @@ const RadarChartOriginal:React.FC<props> = ({radarData, style}) =>  {
   }
   const [maxima, setMaxima] = useState(getMaxima(characterData))
   const [data, setData] = useState(processData(characterData))
-  console.log(processData(characterData));
   return (
     <View style={style}>
       <VictoryChart polar

@@ -13,10 +13,6 @@ const RadarChartDynamicFixedScale:React.FC<props> = ({radarData, style}) =>  {
       memo[key] = data.map((d) => d[key]);
       return memo;
     }, {});
-    console.log("getMaxima", Object.keys(groupedData).reduce((memo, key) => {
-      memo[key] = Math.max(...groupedData[key]);
-      return memo;
-    }, {}))
     return Object.keys(groupedData).reduce((memo, key) => {
       memo[key] = Math.max(...groupedData[key]);
       return memo;
@@ -30,7 +26,6 @@ const RadarChartDynamicFixedScale:React.FC<props> = ({radarData, style}) =>  {
         return { x: key, y: d[key] / scaleLimit };
       });
     };
-    console.log("processData", data.map((datum: any) => makeDataArray(datum)))
     return data.map((datum: any) => makeDataArray(datum));
   }
 
@@ -40,9 +35,8 @@ const RadarChartDynamicFixedScale:React.FC<props> = ({radarData, style}) =>  {
   }
   
   const [maxima, setMaxima] = useState(getMaxima(characterData))
-  const [scaleLimit, setScaleLimit] = useState(getScaleLimit());
+  const [scaleLimit, setScaleLimit] = useState(getScaleLimit())
   const [data, setData] = useState(processData(characterData))
-  console.log(processData(characterData));
   return (
     <View style={style}>
       <VictoryChart polar
