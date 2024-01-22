@@ -1,9 +1,9 @@
 <p align="center">
-    <img src="src/assets/radarchart1.png" width="350">
-    <img src="src/assets/radarchart2.png" width="350">
-    <img src="src/assets/radarchart3.png" width="350">
+    <img src="assets/radarchart1.png" width="350">
+    <img src="assets/radarchart2.png" width="350">
+    <img src="assets/radarchart3.png" width="350">
 </p>
-# RadarChart Example
+## RadarChart Example
 
 ## Usage
 
@@ -19,6 +19,7 @@ Launch Android
 npm run android
 ```
 
+Launch iOS
 ```ios
 npm run ios
 ```
