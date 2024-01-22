@@ -6,13 +6,17 @@ interface props {
     radarData: Array<any>,
     style: any
 }
-const RadarChart:React.FC<props> = ({radarData, style}) =>  {
+const RadarChartDynamicFixedScale:React.FC<props> = ({radarData, style}) =>  {
     const [characterData, setCharacterData] = useState(radarData);
   const getMaxima = (data: any) => {
     const groupedData = Object.keys(data[0]).reduce((memo, key) => {
       memo[key] = data.map((d) => d[key]);
       return memo;
     }, {});
+    console.log("getMaxima", Object.keys(groupedData).reduce((memo, key) => {
+      memo[key] = Math.max(...groupedData[key]);
+      return memo;
+    }, {}))
     return Object.keys(groupedData).reduce((memo, key) => {
       memo[key] = Math.max(...groupedData[key]);
       return memo;
@@ -23,17 +27,25 @@ const RadarChart:React.FC<props> = ({radarData, style}) =>  {
     const maxByGroup = maxima;
     const makeDataArray = (d: any) => {
       return Object.keys(d).map((key) => {
-        return { x: key, y: d[key] / maxByGroup[key] };
+        return { x: key, y: d[key] / scaleLimit };
       });
     };
+    console.log("processData", data.map((datum: any) => makeDataArray(datum)))
     return data.map((datum: any) => makeDataArray(datum));
   }
+
+  const getScaleLimit = () => {
+    const temp: Array<number> = Object.values(maxima);
+    return Math.max(...temp);
+  }
+  
   const [maxima, setMaxima] = useState(getMaxima(characterData))
+  const [scaleLimit, setScaleLimit] = useState(getScaleLimit());
   const [data, setData] = useState(processData(characterData))
   console.log(processData(characterData));
   return (
     <View style={style}>
-       <VictoryChart polar
+      <VictoryChart polar
         theme={VictoryTheme.material}
         domain={{ y: [ 0, 1 ] }}
       >
@@ -47,9 +59,10 @@ const RadarChart:React.FC<props> = ({radarData, style}) =>  {
       {
         Object.keys(maxima).map((key, i) => {
           return (
-            <VictoryPolarAxis key={i} dependentAxis
+            <VictoryPolarAxis 
+            key={i} dependentAxis
               style={{
-                axisLabel: { padding: 10 },
+                axisLabel: { padding: 20 },
                 axis: { stroke: "none" },
                 grid: { stroke: "grey", strokeWidth: 0.25, opacity: 0.5 }
               }}
@@ -57,9 +70,11 @@ const RadarChart:React.FC<props> = ({radarData, style}) =>  {
                 <VictoryLabel labelPlacement="vertical"/>
               }
               labelPlacement="perpendicular"
-              axisValue={i + 1} label={key}
-              tickFormat={(t) => Math.ceil(t * maxima[key])}
-              tickValues={[0.25, 0.5, 0.75]}
+              axisValue={i + 1}
+              label={key}
+              tickFormat={(t) => t * scaleLimit}
+              tickValues={[0.25, 0.5, 0.75, 1]}
+              tickCount={10}
             />
           );
         })
@@ -72,11 +87,8 @@ const RadarChart:React.FC<props> = ({radarData, style}) =>  {
             grid: { stroke: "grey", opacity: 0.5 }
           }}
         />
-
       </VictoryChart>
     </View>
   );
 }
-
-
-export default RadarChart;
+export default RadarChartDynamicFixedScale;
